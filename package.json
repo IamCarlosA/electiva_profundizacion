@@ -1,0 +1,21 @@
+{
+  "name": "electiva-profundizacion",
+  "version": "1.0.0",
+  "description": "Trabajo final de carrito de comprar para materia Electiva en Profundización (Usco)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "Carlos Andrés Alvarado Calderón",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.3",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7"
+  }
+}
