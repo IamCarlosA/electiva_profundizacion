@@ -36,34 +36,36 @@ const createInvoice = async (req = request, res = response) => {
 
 const getInvoiceById = async (req = request, res = response) => {
     const id = req.params.id;
-    await Invoice.findById(id, (error, invoice) => {
-        if (!error) {
-            if (invoice) {
-                res.status(200).json({
-                    "state": true,
-                    invoice
-                })
-            } else {
-                res.status(404).json({
-                    "state": false,
-                    "message": "invoice not found"
-                })
-            }
+    await Invoice.findById(id)
+        .populate('products.product')
+        .exec((error, invoice) => {
+            if (!error) {
+                if (invoice) {
+                    res.status(200).json({
+                        "state": true,
+                        invoice
+                    })
+                } else {
+                    res.status(404).json({
+                        "state": false,
+                        "message": "invoice not found"
+                    })
+                }
 
-        } else {
-            console.error(error)
-            res.status(500).json({
-                "state": false,
-                "message": "Error server"
-            });
-        }
-    });
+            } else {
+                console.error(error)
+                res.status(500).json({
+                    "state": false,
+                    "message": "Error server"
+                });
+            }
+        });
 }
 
 const getAllInvoice = async (req = request, res = response) => {
 
     await Invoice.find()
-        .populate('products')
+        .populate('products.product')
         .exec((error, invoices) => {
             if (!error) {
                 res.status(200).json({
