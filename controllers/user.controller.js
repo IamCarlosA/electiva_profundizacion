@@ -1,17 +1,17 @@
 const { request, response } = require('express');
 
 //model
-const Product = require('../models/product.model');
+const User = require('../models/user.model');
 
-const createProduct = async (req = request, res = response) => {
-    const product = req.body;
+const createUser = async (req = request, res = response) => {
+    const user = req.body;
 
-    const newProduct = new Product(product);
-    await newProduct.save((error) => {
+    const newUser = new User(user);
+    await newUser.save((error) => {
         if (!error) {
             res.status(201).json({
                 "state": true,
-                message: `Product ${product.name} created succefully`
+                message: `User ${user.name} created succefully`
             })
         } else {
             console.error(error)
@@ -23,13 +23,13 @@ const createProduct = async (req = request, res = response) => {
     });
 }
 
-const getAllProducts = async (req = request, res = response) => {
+const getAllUsers = async (req = request, res = response) => {
 
-    await Product.find((error, products) => {
+    await User.find((error, users) => {
         if (!error) {
             res.status(200).json({
                 "state": true,
-                products
+                users
             })
         } else {
             console.error(error)
@@ -42,15 +42,43 @@ const getAllProducts = async (req = request, res = response) => {
 
 }
 
-const getProductById = async (req = request, res = response) => {
+const getUserById = async (req = request, res = response) => {
     const id = req.params.id;
 
-    await Product.findById(id, (error, product) => {
+    await User.findById(id, (error, user) => {
         if (!error) {
-            if (product) {
+            if (user) {
                 res.status(200).json({
                     "state": true,
-                    product
+                    user
+                })
+            } else {
+                res.status(404).json({
+                    "state": false,
+                    "message": "user not found"
+                })
+            }
+
+        } else {
+            console.error(error)
+            res.status(500).json({
+                "state": false,
+                "message": "Error server"
+            });
+        }
+    });
+
+}
+
+const updateUser = async (req = request, res = response) => {
+    const updateUser = req.body;
+    const id = req.params.id;
+    await User.findByIdAndUpdate(id, updateUser, (error, user) => {
+        if (!error) {
+            if (user) {
+                res.status(200).json({
+                    "state": true,
+                    "message": "user updated"
                 })
             } else {
                 res.status(404).json({
@@ -70,47 +98,19 @@ const getProductById = async (req = request, res = response) => {
 
 }
 
-const updateProduct = async (req = request, res = response) => {
-    const updateProduct = req.body;
+const deleteUser= async (req = request, res = response) => {
     const id = req.params.id;
-    await Product.findByIdAndUpdate(id, updateProduct, (error, product) => {
+    await User.findByIdAndDelete(id, (error, user) => {
         if (!error) {
-            if (product) {
+            if (user) {
                 res.status(200).json({
                     "state": true,
-                    "message": "Product updated"
+                    "message": "user deleted"
                 })
             } else {
                 res.status(404).json({
                     "state": false,
-                    "message": "Product not found"
-                })
-            }
-
-        } else {
-            console.error(error)
-            res.status(500).json({
-                "state": false,
-                "message": "Error server"
-            });
-        }
-    });
-
-}
-
-const deleteProduct = async (req = request, res = response) => {
-    const id = req.params.id;
-    await Product.findByIdAndDelete(id, (error, product) => {
-        if (!error) {
-            if (product) {
-                res.status(200).json({
-                    "state": true,
-                    "message": "Product deleted"
-                })
-            } else {
-                res.status(404).json({
-                    "state": false,
-                    "message": "Product not found"
+                    "message": "user not found"
                 })
             }
 
@@ -127,9 +127,9 @@ const deleteProduct = async (req = request, res = response) => {
 
 
 module.exports = {
-    createProduct,
-    getAllProducts,
-    getProductById,
-    updateProduct,
-    deleteProduct
+    createUser,
+    getAllUsers,
+    getUserById,
+    updateUser,
+    deleteUser
 }
